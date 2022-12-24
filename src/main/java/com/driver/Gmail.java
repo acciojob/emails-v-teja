@@ -1,9 +1,7 @@
 package com.driver;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Stack;
 
 public class Gmail extends Email {
 
@@ -79,10 +77,9 @@ public class Gmail extends Email {
         //find number of mails in the inbox which are received between given dates
         //It is guaranteed that start date <= end date
         int count = 0;
-        Iterator iterator = inbox.inbox.iterator();
-        while(iterator.hasNext()){
-            Mail temp = (Mail) iterator.next();
-            if(temp.getDate().compareTo(start)>=0 && temp.getDate().compareTo(end)<=0){
+
+        for (Mail temp : inbox.inbox) {
+            if (temp.getDate().compareTo(start) >= 0 && temp.getDate().compareTo(end) <= 0) {
                 count++;
             }
         }
