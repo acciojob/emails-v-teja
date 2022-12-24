@@ -8,14 +8,14 @@ public class Gmail extends Email {
     int inboxCapacity; //maximum number of mails inbox can store
     //Inbox: Stores mails. Each mail has date (Date), sender (String), message (String). It is guaranteed that message is distinct for all mails.
     //Trash: Stores mails. Each mail has date (Date), sender (String), message (String)
-    private Inbox inbox;
-    private Trash trash;
+    private Inbox gmail;
+    private Trash bin;
 
     public Gmail(String emailId, int inboxCapacity) {
         super(emailId);
         this.inboxCapacity = inboxCapacity;
-        this.inbox = new Inbox();
-        this.trash = new Trash();
+        this.gmail = new Inbox();
+        this.bin = new Trash();
     }
 
 
@@ -26,11 +26,11 @@ public class Gmail extends Email {
         // 2. The mails are received in non-decreasing order. This means that the date of a new mail is greater than equal to the dates of mails received already.
         if(getInboxSize()<this.inboxCapacity){
             Mail mail = new Mail(date,sender,message);
-            this.inbox.inbox.offer(mail);
+            this.gmail.inbox.offerLast(mail);
         }else{
-            this.trash.trash.offer(inbox.inbox.poll());
+            this.bin.trash.offer(gmail.inbox.pollFirst());
             Mail mail = new Mail(date,sender,message);
-            this.inbox.inbox.offer(mail);
+            this.gmail.inbox.offerLast(mail);
         }
 
     }
@@ -39,16 +39,20 @@ public class Gmail extends Email {
         // Each message is distinct
         // If the given message is found in any mail in the inbox, move the mail to trash, else do nothing
         int pos = 0;
-        Iterator<Mail> iterator = this.inbox.inbox.iterator();
+        Iterator<Mail> iterator = this.gmail.inbox.iterator();
         Mail temp = null;
+        boolean flag = true;
         while(iterator.hasNext()){
             temp = (Mail) iterator.next();
-            if(temp.getMessage().equals(message)){
+            if(temp.getMessage().equals(message)) {
+                flag = false;
                 break;
             }
             pos++;
         }
-        this.inbox.inbox.remove(temp);
+        if(flag==false) {
+            this.gmail.inbox.remove(temp);
+        }
 
     }
 
@@ -58,7 +62,7 @@ public class Gmail extends Email {
         if(getInboxSize()==0){
             return null;
         }
-            Mail temp = this.inbox.inbox.getLast();
+            Mail temp = this.gmail.inbox.getLast();
             return temp.getMessage();
 
     }
@@ -69,7 +73,7 @@ public class Gmail extends Email {
         if(getInboxSize()==0){
             return null;
         }
-        Mail temp = this.inbox.inbox.getFirst();
+        Mail temp = this.gmail.inbox.getFirst();
         return temp.getMessage();
     }
 
@@ -78,23 +82,23 @@ public class Gmail extends Email {
         //It is guaranteed that start date <= end date
         int count = 0;
 
-        for (Mail temp : this.inbox.inbox) {
+        for (Mail temp : this.gmail.inbox) {
             if (temp.getDate().compareTo(start) >= 0 && temp.getDate().compareTo(end) <= 0) {
                 count++;
             }
         }
-        return count;
+        return count
     }
 
     public int getInboxSize(){
         // Return number of mails in inbox
-        return this.inbox.inbox.size();
+        return this.gmail.inbox.size();
 
     }
 
     public int getTrashSize(){
         // Return number of mails in Trash
-        return this.trash.trash.size();
+        return this.bin.trash.size();
 
     }
 
@@ -102,7 +106,7 @@ public class Gmail extends Email {
         // clear all mails in the trash
         int n = getTrashSize();
         for(int i=0;i<n;i++){
-            this.trash.trash.poll();
+            this.bin.trash.poll();
         }
     }
 

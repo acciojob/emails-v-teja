@@ -33,6 +33,9 @@ public class Email {
         // 5. It contains at least one special character. Any character apart from alphabets and digits is a special character
         if(oldPassword.equals(getPassword())){
             int n = newPassword.length();
+            if(n<8){
+                return;
+            }
             int upperLength = 0;
             int lowerLength = 0;
             int noDigit = 0;
@@ -41,7 +44,7 @@ public class Email {
                 char temp = newPassword.charAt(i);
                 if(Character.isUpperCase(temp)){
                     upperLength++;
-                } else if (Character.isLowerCase(temp)) {
+                }else if(Character.isLowerCase(temp)) {
                     lowerLength++;
                 }else if(Character.isDigit(temp)){
                     noDigit++;
